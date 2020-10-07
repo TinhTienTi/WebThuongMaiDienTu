@@ -30,4 +30,9 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
         public int HomeTownProvinceName { get; set; }
         #endregion
     }
+    public class ParameterCate
+    {
+        public int ID { get; set; }
+        public string CateName { get; set; }
+    }
 }

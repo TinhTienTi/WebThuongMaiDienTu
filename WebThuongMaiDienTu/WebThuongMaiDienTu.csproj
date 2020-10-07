@@ -117,10 +117,12 @@
     <Compile Include="Areas\Admin\Code\SessionHelper.cs" />
     <Compile Include="Areas\Admin\Code\UserSession.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\EmployeeController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
     <Compile Include="Areas\Admin\Models\DB\Account.cs" />
+    <Compile Include="Areas\Admin\Models\DB\Category.cs" />
     <Compile Include="Areas\Admin\Models\DB\GetLocation.cs" />
     <Compile Include="Areas\Admin\Models\DB\Helper.cs" />
     <Compile Include="Areas\Admin\Models\DB\ParameterInfo.cs" />
@@ -134,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Scripts\Account.js" />
+    <Content Include="Areas\Admin\Scripts\CategoryJS.js" />
     <Content Include="Areas\Admin\Scripts\Staff.js" />
     <Content Include="Areas\Admin\Style\Admin\css\sb-admin-2.css" />
     <Content Include="Areas\Admin\Style\Admin\css\sb-admin-2.min.css" />
@@ -2530,6 +2533,7 @@
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
     <Content Include="Areas\Admin\Views\Account\AccountView.cshtml" />
+    <Content Include="Areas\Admin\Views\Category\CategoryView.cshtml" />
     <None Include="packages.config" />
     <Content Include="Scripts\libs\kendo-ui\2019.1.220\js\cultures\kendo.culture.aa-DJ.min.js" />
     <Content Include="Scripts\libs\kendo-ui\2019.1.220\js\cultures\kendo.culture.aa-ER.min.js" />

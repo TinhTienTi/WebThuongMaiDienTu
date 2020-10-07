@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "Category View";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div id="form-search">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Tìm kiếm</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <input class="form-control form-control-user" id="txtSearch" placeholder="Nhập tên loại">
+            </div>
+            <button onclick="getCategory()" class="btn btn-primary">Tìm kiếm</button>
+            <button onclick="callDivCategory()" class="btn btn-primary">Tạo mới</button>
+        </div>
+        <div class="order"></div>
+    </div>
+</div>
+<div id="form-detail">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách Loại sản phẩm</h6>
+        </div>
+        <div class="card-body">
+            <div id="grid_ListAll_Category"></div>
+        </div>
+        <div id="deleteDetails"></div>
+    </div>
+</div>
+<div id="form-info">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thêm Loại Sản Phẩm Mới</h6>
+        </div>
+        <div class="form" id="form">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">
+                            Tên loại sản phẩm:
+                            <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorImageCateName"></i>
+                            <small id="checkErrorMessageCateName"></small>
+                        </label>
+                        <input class="form-control" id="txtCateName" placeholder="Tên loại sản phẩm">
+                    </div>
+                </div>
+                <hr />
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                    Đăng ký
+                </button>
+                <button onclick="BackSearch()" class="btn btn-danger">Quay lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* Div Thông báo *@
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:Highlight">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="color:white">Thêm nhân viên mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Hãy chắc chắn rằng bạn muốn thêm một loại sản phẩm mới và đã nhập đúng tên?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="InsertCatefory()" data-dismiss="modal">Tiếp tục</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* Xoá *@
+<script type="text/x-kendo-template" id="templateDelete">
+    <div id="details-container">
+        <label>Bạn có chắc muốn xoá loại sản phẩm có mã là: #= ID# và tên: #= CateName #?</label>
+        <hr />
+        <button onclick="DeleteCate(2, 0)" class="btn btn-secondary">Huỷ</button>
+        <button onclick="DeleteCate(1, #= ID#)" class="btn btn-danger">Xoá</button>
+    </div>
+</script>
+<script src="~/Areas/Admin/Style/Admin/vendor/jquery/jquery.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/js/sb-admin-2.min.js"></script>
+<script src="~/Areas/Admin/Scripts/CategoryJS.js"></script>

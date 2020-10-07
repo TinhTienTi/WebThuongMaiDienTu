@@ -11,10 +11,10 @@ namespace Models.Framework
     {
         public int ID { get; set; }
 
+        public int? EmployeeID { get; set; }
+
         [StringLength(50)]
         public string DisplayName { get; set; }
-
-        public int? EmployeeID { get; set; }
 
         [StringLength(20)]
         public string AccountName { get; set; }

@@ -140,9 +140,7 @@ function getAllAccount() {
     }
 }
 function enableControl() { }
-function BackSearch() {
-
-}
+function BackSearch() { }
 function setDataSource(ctrl, data) {
     if (!ctrl) return false
     // get config

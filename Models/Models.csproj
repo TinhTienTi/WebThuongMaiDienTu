@@ -55,7 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountModel.cs" />
-    <Compile Include="EmployeeInfoModel.cs" />
     <Compile Include="Framework\Account.cs" />
     <Compile Include="Framework\EmployeeInfo.cs" />
     <Compile Include="Framework\LocationDistrict.cs" />
