@@ -25,10 +25,16 @@ function init_Grid_ListAll_Cate() {
             attributes: { style: "text-align: left; font-size: 14px" }
         }, {
             command: {
+                text: "Chỉnh sửa", click: showEditQuestion
+            },
+            title: " ",
+            width: 100
+        }, {
+            command: {
                 text: "Xoá", click: showDeleteQuestion
             },
             title: " ",
-            width: "100px"
+            width: 100
         }],
         dataSource: {
             data: [],
@@ -41,7 +47,7 @@ function init_Grid_ListAll_Cate() {
     }).data("kendoGrid");
     wnd = $("#deleteDetails")
         .kendoWindow({
-            title: "Xoá Thông Tin Nhân Viên",
+            title: "Xoá Thông Tin",
             modal: true,
             visible: false,
             resizable: false,
@@ -49,6 +55,17 @@ function init_Grid_ListAll_Cate() {
         }).data("kendoWindow");
 
     detailsTemplate1 = kendo.template($("#templateDelete").html());
+
+    wnd = $("#editDetails")
+        .kendoWindow({
+            title: "Chỉnh sửa",
+            modal: true,
+            visible: false,
+            resizable: false,
+            width: 500
+        }).data("kendoWindow");
+
+    detailsTemplate = kendo.template($("#templateEdit").html());
 }
 function getCategory() {
 
@@ -196,9 +213,9 @@ function InsertCatefory() {
         });
     }
 }
+// =============================================================== Delete ===========================================================================
 function showDeleteQuestion(e) {
     e.preventDefault();
-
     var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
     wnd.content(detailsTemplate1(dataItem));
     wnd.center().open();
@@ -228,11 +245,12 @@ function DeleteCate(hasDelete, iD) {
                             toastr.warning("Tên này không tồn tại", "Thông báo", { timeOut: 3000 });
                         }
                         if (listCate[0].Result == -1) {
-                            toastr.warning("Tên này không đã được xoá", "Thông báo", { timeOut: 3000 });
+                            toastr.warning("Tên này đã được xoá", "Thông báo", { timeOut: 3000 });
                         }
                         if (listCate[0].Result == 1) {
                             toastr.success("Xoá thành công", "Thông báo", { timeOut: 3000 });
                             getCategory();
+                            wnd.center().close();
                         }
                         break;
                     case 0:
@@ -249,6 +267,81 @@ function DeleteCate(hasDelete, iD) {
         });
     }
     else
+        wnd.center().close();
+}
+// =================================================================End delete=========================================================================
+function showEditQuestion(e) {
+    e.preventDefault();
+    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    wnd.content(detailsTemplate(dataItem));
+    wnd.center().open();
+
+    $('#checkErrorEditImageCateName').hide();
+    $('#checkErrorEditMessageCateName').hide();
+}
+function UpdateCate(hasUpdate, iD) {
+    var updateID = iD;
+    var name = $('#txtEditCateName').val();
+    var isUpdate = hasUpdate;
+
+    if (name == '') {
+        $('#checkErrorEditImageCateName').show();
+        $('#checkErrorEditMessageCateName').show();
+        document.getElementById('checkErrorEditMessageCateName').innerHTML = '<strong style= "color:red"> Tên loại sản phẩm không được để trống.'
+    }
+    else {
+        $('#checkErrorEditImageCateName').hide();
+        $('#checkErrorEditMessageCateName').hide();
+    }
+
+    if (isUpdate == 1 && name != '' ) {
+        $.ajax({
+            traditional: true,
+            url: "UpdateCategory",
+            data: JSON.stringify({ ID: updateID, CateName: name }),
+            contentType: 'application/json; charset=utf-8',
+            type: 'POST',
+            dataType: 'json',
+            timeout: 60 * 60000,
+            error: function (xhr, e) {
+                toastr.error('Lỗi tìm kiếm. Mã lỗi ' + xhr.status, 'Thông báo', { timeOut: 1500 });
+            },
+            success: function (data) {
+                var _result = data.Result;
+                var _error = data.Error;
+                var _type = data.Type;
+                switch (_result) {
+                    case 1:
+                        var listCate = data.ListCate;
+                        if (listCate[0].Result == -1) {
+                            toastr.warning("Tên này không tồn tại", "Thông báo", { timeOut: 3000 });
+                        }
+                        if (listCate[0].Result == 0) {
+                            toastr.warning("Tên này đã được xoá", "Thông báo", { timeOut: 3000 });
+                        }
+                        if (listCate[0].Result == -2) {
+                            toastr.warning("Tên này đã tồn tại", "Thông báo", { timeOut: 3000 });
+                        }
+                        if (listCate[0].Result == 1) {
+                            toastr.success("Chỉnh sửa thành công", "Thông báo", { timeOut: 3000 });
+                            getCategory();
+                            wnd.center().close();
+                        }
+                        break;
+                    case 0:
+                        toastr.warning(_error, 'Thông báo', { timeOut: 1500 });
+                        break;
+                    case -1:
+                        toastr.warning('Lỗi tìm kiếm.', 'Thông báo', { timeOut: 1500 });
+                        break;
+                }
+            },
+            complete: function (cpl) {
+                enableControl(true);
+            }
+        });
+    }
+    if (isUpdate == 2)
         wnd.center().close();
 }
 // ==========================================================================================================================================
