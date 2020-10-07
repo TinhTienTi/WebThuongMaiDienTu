@@ -1,0 +1,221 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div id="form-search">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Tìm kiếm</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <input class="form-control form-control-user" id="txtEmployee" placeholder="Nhập mã nhân viên">
+            </div>
+            <button onclick="GetAllEmployee()" class="btn btn-primary">Tìm kiếm</button>
+            <button onclick="insertEmployeePre()" class="btn btn-primary">Thêm nhân viên</button>
+        </div>
+        <div class="order"></div>
+    </div>
+</div>
+<div id="form-detail">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách nhân viên</h6>
+        </div>
+        <div class="card-body">
+            <div id="grid_ListAll_Staff"></div>
+        </div>
+        <div id="details"></div>
+        <div id="deleteDetails"></div>
+    </div>
+</div>
+@* Div thông tin *@
+<div id="form-info">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thêm nhân viên mới</h6>
+        </div>
+        <div class="form" id="form">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="inputEmail4">
+                            Mã Nhân viên:
+                            <i class="fas fa-exclamation-circle" id="checkErrorImageID"></i>
+                            <small id="checkErrorMessageID"></small>
+                        </label>
+                        <input class="form-control" id="txtEmployeeID" placeholder="Mã nhân viên">
+                    </div>
+                    <div class="form--group col-md-4">
+                        <label for="inputPassword4">
+                            Họ và Tên:
+                            <i class="fas fa-exclamation-circle" id="checkErrorImageName"></i>
+                            <small id="checkErrorMessageName"></small>
+                        </label>
+                        <input class="form-control" id="txtFullName" placeholder="Họ và tên">
+
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputPassword4">
+                            Email:
+                            <i class="fas fa-exclamation-circle" id="checkErrorImageEmail"></i>
+                            <small id="checkErrorMessageEmail"></small>
+                        </label>
+                        <input type="email" class="form-control" id="txtEmail" placeholder="Nhập email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="">
+                            CMND:
+                            <i class="fas fa-exclamation-circle" id="checkErrorImageCitizenID"></i>
+                            <small id="checkErrorMessageCitizenID"></small>
+                        </label>
+                        <input class="form-control" id="txtCitizenID" placeholder="Nhập CMND">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="">Số điện thoại</label>
+                        <input class="form-control" id="txtPhoneNumber" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="">Ngày sinh: </label>
+
+                        <input class="form-control" id="dpkBirthDay" placeholder="Nhập số điện thoại" style="width:100%">
+                    </div>
+                </div>
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Địa chỉ liên lạc</h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="inputProvince">Tỉnh/TP:</label>
+                            <select id="inputProvince" class="form-control" style="width:100%">
+                                <option selected>Chọn tỉnh thành phố: </option>
+
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputDistrict">Quận/huyện</label>
+                            <select id="inputDistrict" class="form-control" style="width:100%">
+                                <option selected>Chọn quận huyện: </option>
+
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputWard">Phường xã</label>
+                            <select id="inputWard" class="form-control" style="width:100%">
+                                <option selected>Chọn phường xã: </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Số nhà:</label>
+                            <input class="form-control" id="inputHouseNumber" placeholder="Số nhà">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Tên đường:</label>
+                            <input class="form-control" id="inputRoadName" placeholder="Tên đường">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quê quán</h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="">Tỉnh/TP:</label>
+                            <select id="homeTownProvince" class="form-control" style="width:100%">
+                                <option selected>Chọn tỉnh thành phố: </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="">Quận/huyện</label>
+                            <select id="homeTownDistrict" class="form-control" style="width:100%">
+                                <option selected>Chọn quận huyện: </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="">Phường xã</label>
+                            <select id="homeTownWard" class="form-control" style="width:100%">
+                                <option selected>Chọn phường xã: </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="">Số nhà:</label>
+                            <input class="form-control" id="txtHHouseNumber" placeholder="Số nhà">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Tên đường:</label>
+                            <input class="form-control" id="txtHRoadName" placeholder="Tên đường">
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                    Đăng ký
+                </button>
+                <button onclick="BackSearch()" class="btn btn-danger">Quay lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/x-kendo-template" id="template">
+    <div id="details-container">
+        <h2>Họ & Tên: #= Name #</h2>
+        <em>Mã nhân viên: #= EmployeeID #</em>
+        <dl>
+            <dt> Trạng thái: #= Enable #</dt>
+            <dt> CMND: #= CitizenID #</dt>
+            <dt> Điện thoại: #= Phone #</dt>
+            <dt> Địa chỉ: #= Location #</dt>
+            <dt> Quê quán: #= HomeTown #</dt>
+            <dt> Ngày bắt đầu: #= StartDate == null ? kendo.toString('') :  kendo.toString(kendo.parseDate(StartDate, 'yyyy-MM-dd'), 'MM/dd/yy hh:mm:ss') #</dt>
+            <dt> Ngày kết thúc: #= EndDate == null ? kendo.toString('') :  kendo.toString(kendo.parseDate(EndDate, 'yyyy-MM-dd'), 'MM/dd/yy hh:mm:ss')#</dt>
+        </dl>
+    </div>
+</script>
+<script type="text/x-kendo-template" id="templateDelete">
+    <div id="details-container">
+        <label>Bạn có chắc muốn xoá nhân viên có mã là: #= EmployeeID# ?</label>
+        <hr />
+        <button onclick="DeleteEmployee(1, #= EmployeeID#)" class="btn btn-danger">Xoá</button>
+        <button onclick="DeleteEmployee(2, 0)" class="btn btn-primary">Huỷ</button>
+    </div>
+</script>
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:Highlight">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="color:white">Thêm nhân viên mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Hãy chắc chắn rằng bạn muốn thêm nhân viên mới và đã nhập đúng thông tin?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="insert_EmployeeCheck()" data-dismiss="modal">Tiếp tục</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Areas/Admin/Style/Admin/vendor/jquery/jquery.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="~/Areas/Admin/Style/Admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="~/Areas/Admin/Style/Admin/js/sb-admin-2.min.js"></script>
+<!-- Page level plugins -->
+
+<script src="~/Areas/Admin/Scripts/Staff.js"></script>

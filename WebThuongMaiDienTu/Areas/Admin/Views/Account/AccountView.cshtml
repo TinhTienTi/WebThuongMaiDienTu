@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div id="form-search">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Tìm kiếm</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <input class="form-control form-control-user" id="txtSearch" placeholder="Nhập mã nhân viên">
+            </div>
+            <button onclick="getAllAccount()" class="btn btn-primary">Tìm kiếm</button>
+            <button onclick="" class="btn btn-primary">Tạo account mới</button>
+        </div>
+        <div class="order"></div>
+    </div>
+</div>
+<div id="form-detail">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách nhân viên</h6>
+        </div>
+        <div class="card-body">
+            <div id="grid_ListAll_Account"></div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Areas/Admin/Style/Admin/vendor/jquery/jquery.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="~/Areas/Admin/Style/Admin/js/sb-admin-2.min.js"></script>
+<script src="~/Areas/Admin/Scripts/Account.js"></script>

@@ -1,0 +1,12 @@
+E:\WebThuongMaiDienTu\Models\bin\Debug\Models.dll.config
+E:\WebThuongMaiDienTu\Models\bin\Debug\Models.dll
+E:\WebThuongMaiDienTu\Models\bin\Debug\Models.pdb
+E:\WebThuongMaiDienTu\Models\bin\Debug\EntityFramework.dll
+E:\WebThuongMaiDienTu\Models\bin\Debug\EntityFramework.SqlServer.dll
+E:\WebThuongMaiDienTu\Models\bin\Debug\EntityFramework.xml
+E:\WebThuongMaiDienTu\Models\bin\Debug\EntityFramework.SqlServer.xml
+E:\WebThuongMaiDienTu\Models\obj\Debug\Models.csprojAssemblyReference.cache
+E:\WebThuongMaiDienTu\Models\obj\Debug\Models.csproj.CoreCompileInputs.cache
+E:\WebThuongMaiDienTu\Models\obj\Debug\Models.csproj.CopyComplete
+E:\WebThuongMaiDienTu\Models\obj\Debug\Models.dll
+E:\WebThuongMaiDienTu\Models\obj\Debug\Models.pdb
