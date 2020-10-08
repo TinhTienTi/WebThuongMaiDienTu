@@ -35,4 +35,9 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
         public int ID { get; set; }
         public string CateName { get; set; }
     }
+    public class ParameterVip
+    {
+        public int ID { get; set; }
+        public string VipName { get; set; }
+    }
 }

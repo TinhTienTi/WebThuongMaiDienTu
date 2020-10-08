@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Category View";
+    ViewBag.Title = "VipConsumer";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 <div id="form-search">
@@ -12,24 +12,24 @@
             <div class="form-group">
                 <input class="form-control form-control-user" id="txtSearch" placeholder="Nhập tên loại">
             </div>
-            <button onclick="getCategory()" class="btn btn-primary">Tìm kiếm</button>
-            <button onclick="callDivCategory()" class="btn btn-primary">Tạo mới</button>
+            <button onclick="getVipConsumer()" class="btn btn-primary">Tìm kiếm</button>
+            <button onclick="callDivVip()" class="btn btn-primary">Tạo mới</button>
         </div>
-        <div class="order"></div>
+        <div id="editDetails"></div>
+        <div id="deleteDetails"></div>
     </div>
 </div>
 <div id="form-detail">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Danh sách Loại sản phẩm</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách loại VIP</h6>
         </div>
         <div class="card-body">
-            <div id="grid_ListAll_Category"></div>
+            <div id="grid_List_VipConsumer"></div>
         </div>
-        <div id="deleteDetails"></div>
-        <div id="editDetails"></div>
     </div>
 </div>
+
 <div id="form-info">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -40,11 +40,11 @@
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="inputEmail4">
-                            Tên loại sản phẩm:
-                            <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorImageCateName"></i>
-                            <small id="checkErrorMessageCateName"></small>
+                            Tên loại VIP:
+                            <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorImageVipName"></i>
+                            <small id="checkErrorMessageVipName"></small>
                         </label>
-                        <input class="form-control" id="txtCateName" placeholder="Tên loại sản phẩm">
+                        <input class="form-control" id="txtVipName" placeholder="Tên loại VIP">
                     </div>
                 </div>
                 <hr />
@@ -67,11 +67,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                Hãy chắc chắn rằng bạn muốn thêm một loại sản phẩm mới và đã nhập đúng tên?
+                Hãy chắc chắn rằng bạn muốn thêm một loại mới và đã nhập đúng tên?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="InsertCatefory()" data-dismiss="modal">Tiếp tục</button>
+                <button type="button" class="btn btn-primary" onclick="InsertVipConsumer()" data-dismiss="modal">Tiếp tục</button>
             </div>
         </div>
     </div>
@@ -79,10 +79,10 @@
 @* Xoá *@
 <script type="text/x-kendo-template" id="templateDelete">
     <div id="details-container">
-        <label>Bạn có chắc muốn xoá loại sản phẩm có mã là: #= ID# và tên: #= CateName #?</label>
+        <label>Bạn có chắc muốn xoá loại sản phẩm có mã là: #= ID# và tên: #= VipName #?</label>
         <hr />
-        <button onclick="DeleteCate(2, 0)" class="btn btn-secondary">Huỷ</button>
-        <button onclick="DeleteCate(1, #= ID#)" class="btn btn-danger">Xoá</button>
+        <button onclick="DeleteVip(2,0)" class="btn btn-secondary">Huỷ</button>
+        <button onclick="DeleteVip(1, #=ID#)" class="btn btn-danger">Xoá</button>
     </div>
 </script>
 @* Chỉnh sửa *@
@@ -90,14 +90,15 @@
     <div id="details-container">
         <label for="inputName">
             Tên loại sản phẩm:
-            <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImageCateName"></i>
-            <small id="checkErrorEditMessageCateName"></small>
+            <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImageVipName"></i>
+            <small id="checkErrorEditMessageVipName"></small>
         </label>
-        <input class="form-control" id="txtEditCateName" placeholder="Tên loại sản phẩm" value="#= CateName#">
+        <input class="form-control  col-md-11" id="txtEditVipName" placeholder="Tên loại sản phẩm" value="#= VipName#">
         <hr />
         <button onclick="UpdateCate(2, 0)" class="btn btn-secondary">Huỷ</button>
         <button onclick="UpdateCate(1, #= ID#)" class="btn btn-danger">Cập nhật</button>
     </div>
 </script>
+
 <script src="~/Areas/Admin/Style/Admin/vendor/jquery/jquery.min.js"></script>
-<script src="~/Areas/Admin/Scripts/CategoryJS.js"></script>
+<script src="~/Areas/Admin/Scripts/VIPConsumerJS.js"></script>
