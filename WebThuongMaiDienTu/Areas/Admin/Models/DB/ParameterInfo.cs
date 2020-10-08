@@ -40,4 +40,18 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
         public int ID { get; set; }
         public string VipName { get; set; }
     }
+    public class ParameterConsumer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string CMND { get; set; }
+        public string Location { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public DateTime? BirthDay { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string VipName { get; set; }
+        public string Enable { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+    }
 }

@@ -70,10 +70,10 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
             }
         }
     }
-    public class DeleteConsumer
+    public class DeleteVipConsumer
     {
         public int Result { get; set; }
-        public static List<DeleteConsumer> DeleteVip(ParameterVip model)
+        public static List<DeleteVipConsumer> DeleteVip(ParameterVip model)
         {
             using (IDbConnection db = new SqlConnection(Helper.GetSqlConnection()))
             {
@@ -81,7 +81,7 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
                 {
                     db.Open();
                 }
-                return db.Query<DeleteConsumer>("DeleteVipConsumer", new { ID = model.ID }, commandType: CommandType.StoredProcedure).ToList();
+                return db.Query<DeleteVipConsumer>("DeleteVipConsumer", new { ID = model.ID }, commandType: CommandType.StoredProcedure).ToList();
             }
         }
     }
