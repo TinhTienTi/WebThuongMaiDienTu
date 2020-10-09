@@ -6,22 +6,42 @@ $(document).ready(function () {
     $('#form-detail').hide();
     $('#form-info').hide();
 });
-
+function titleFilter(element) {
+    element.kendoAutoComplete({
+        dataSource: titles
+    });
+}
 
 function init_Grid_ListAll_Cate() {
     grid_ListAll_Category = $("#grid_ListAll_Category").kendoGrid({
         height: 500,
         scrollable: true,
         sortable: true,
+        filterable: {
+            extra: false,
+            operators: {
+                string: {
+                    startswith: "Bắt đầu bằng",
+                    eq: "Bằng",
+                    neq: "Không bằng"
+                }
+            }
+        },
         columns: [{
             field: "ID",
             title: "#",
             width: 150,
+            filterable: {
+                ui: titleFilter
+            },
             attributes: { style: "text-align: right; font-size: 14px" }
         }, {
             field: "CateName",
             title: "Tên loại sản phẩm",
             width: 200,
+            filterable: {
+                ui: titleFilter
+            },
             attributes: { style: "text-align: left; font-size: 14px" }
         }, {
             command: {
@@ -292,7 +312,7 @@ function UpdateCate(hasUpdate, iD) {
         $('#checkErrorEditMessageCateName').hide();
     }
 
-    if (isUpdate == 1 && name != '' ) {
+    if (isUpdate == 1 && name != '') {
         $.ajax({
             traditional: true,
             url: "UpdateCategory",

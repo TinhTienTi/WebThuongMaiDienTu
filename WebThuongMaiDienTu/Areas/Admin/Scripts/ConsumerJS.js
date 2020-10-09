@@ -11,20 +11,37 @@ function init_grid_List_Consumer() {
         height: 500,
         scrollable: true,
         sortable: true,
+        filterable: {
+            extra: false,
+            operators: {
+                string: {
+                    startswith: "Bắt đầu bằng",
+                    eq: "Bằng",
+                    neq: "Không bằng"
+                }
+            }
+        },
         columns: [{
             field: "ID",
             title: "#",
             width: 30,
+            filterable: false,
             attributes: { style: "text-align: right; font-size: 14px" }
         }, {
             field: "Name",
             title: "Tên khách hàng",
             width: 200,
+            filterable: {
+                ui: titleFilter
+            },
             attributes: { style: "text-align: left; font-size: 14px" }
         }, {
             field: "CMND",
             title: "CMND",
             width: 150,
+            filterable: {
+                ui: titleFilter
+            },
             attributes: { style: "text-align: right; font-size: 14px" }
         }, {
             field: "Location",
@@ -35,16 +52,25 @@ function init_grid_List_Consumer() {
             field: "Phone",
             title: "SĐT",
             width: 150,
+            filterable: {
+                ui: titleFilter
+            },
             attributes: { style: "text-align: right; font-size: 14px" }
         }, {
             field: "Email",
             title: "Email",
             width: 200,
+            filterable: {
+                ui: titleFilter
+            },
             attributes: { style: "text-align: left; font-size: 14px" }
         }, {
             field: "BirthDay",
             title: "Ngày sinh",
             width: 200,
+            filterable: {
+                ui: "datetimepicker"
+            },
             attributes: { style: "text-align: left; font-size: 14px" }
         }, {
             command: {
@@ -105,7 +131,11 @@ function showDeleteQuestion(e) {
     wnd.content(detailsTemplate1(dataItem));
     wnd.center().open();
 }
-
+function titleFilter(element) {
+    element.kendoAutoComplete({
+        dataSource: titles
+    });
+}
 function getAllConsumer() {
     $('#form-detail').show();
     $('#form-info').hide();
