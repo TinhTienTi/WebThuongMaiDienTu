@@ -209,18 +209,18 @@ BEGIN
            + ', ' + P1.ProvinceNameFULLVN AS HomeTown,
            StartDate,
            EndDate
-    FROM EmployeeInfo E
-        LEFT JOIN LocationWard W (NOLOCK)
+    FROM dbo.EmployeeInfo AS E
+        LEFT JOIN dbo.LocationWard AS W (NOLOCK)
             ON W.ID = E.LocationWardID
-        LEFT JOIN LocationDistrict D (NOLOCK)
+        LEFT JOIN dbo.LocationDistrict AS D (NOLOCK)
             ON D.DistrictID = E.LocationDistrictId
-        LEFT JOIN LocationProvince P (NOLOCK)
+        LEFT JOIN dbo.LocationProvince AS P (NOLOCK)
             ON P.ID = E.LocationProvinceId
-        LEFT JOIN LocationWard W1 (NOLOCK)
+        LEFT JOIN dbo.LocationWard AS W1 (NOLOCK)
             ON W1.ID = E.HomeTownWardName
-        LEFT JOIN LocationDistrict D1 (NOLOCK)
+        LEFT JOIN dbo.LocationDistrict AS D1 (NOLOCK)
             ON D1.DistrictID = E.HomeTownDistrictName
-        LEFT JOIN LocationProvince P1 (NOLOCK)
+        LEFT JOIN dbo.LocationProvince AS P1 (NOLOCK)
             ON P1.ID = E.HomeTownProvinceName
     WHERE E.IsEnable = 1;
 END;
@@ -233,7 +233,7 @@ BEGIN
     IF EXISTS
     (
         SELECT 1
-        FROM EmployeeInfo
+        FROM dbo.EmployeeInfo AS ei
         WHERE EmployeeID = @EmployeeID
               AND IsEnable = 1
     )
@@ -265,7 +265,7 @@ BEGIN
     IF EXISTS
     (
         SELECT 1
-        FROM EmployeeInfo
+        FROM dbo.EmployeeInfo AS ei
         WHERE EmployeeID = @EmployeeID
               AND IsEnable = 1
     )
@@ -273,19 +273,19 @@ BEGIN
     ELSE IF EXISTS
     (
         SELECT 1
-        FROM EmployeeInfo
+        FROM dbo.EmployeeInfo AS ei
         WHERE EmployeeID = @EmployeeID
               AND IsEnable = 0
     )
     BEGIN
-        UPDATE EmployeeInfo
+        UPDATE dbo.EmployeeInfo
         SET IsEnable = 1,
             CitizenID = @CitizenID
         WHERE EmployeeID = @EmployeeID;
     END;
     ELSE
     BEGIN
-        INSERT INTO EmployeeInfo
+        INSERT INTO dbo.EmployeeInfo
         (
             EmployeeID,
             FullNameVN,
@@ -345,9 +345,9 @@ GO
 
 CREATE TABLE Category
 (
-    ID INT IDENTITY(2, 2) PRIMARY KEY,
+    ID INT IDENTITY(2, 2) PRIMARY KEY NOT NULL,
     CateName NVARCHAR(100) NULL,
-    IsEnable INT
+    IsEnable INT NULL
 );
 GO
 
@@ -478,6 +478,17 @@ BEGIN
     END;
 END;
 GO
+CREATE TABLE VipConsumer
+(
+    ID INT IDENTITY(2, 2) PRIMARY KEY NOT NULL,
+    VipName NVARCHAR(150) NULL,
+    IsEnable INT NULL,
+    CreateDated DATETIME NULL,
+    CreatedBy VARCHAR(20) NULL,
+    ModifiedDate DATETIME NULL,
+    ModifiedByUser VARCHAR(20) NULL
+);
+GO
 
 CREATE TABLE Consumer
 (
@@ -490,23 +501,14 @@ CREATE TABLE Consumer
     BirthDay DATE NULL,
     CreatedDate DATETIME NULL,
     VipConsumerId INT NULL,
+    AvailableBalances BIGINT NULL,
     Score INT NULL,
     IsEnable SMALLINT NULL,
-	ModifiedDate DATETIME
+    ModifiedDate DATETIME NULL,
+    FOREIGN KEY (VipConsumerId) REFERENCES dbo.VipConsumer (ID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 GO
 
-CREATE TABLE VipConsumer
-(
-    ID INT IDENTITY(2, 2) PRIMARY KEY NOT NULL,
-    VipName NVARCHAR(150) NULL,
-    IsEnable INT NULL,
-    CreateDated DATETIME NULL,
-    CreatedBy VARCHAR(20) NULL,
-    ModifiedDate DATETIME NULL,
-    ModifiedByUser VARCHAR(20) NULL
-);
-GO
 INSERT INTO dbo.VipConsumer
 (
     VipName,
@@ -675,74 +677,97 @@ BEGIN
         SELECT 1 AS Result;
     END;
 END;
-go
-Create PROC GetConsumer
-AS
-BEGIN
-	SELECT C.Id, Name, CMND, Location, 
-			Phone, BirthDay, CreatedDate, vc.VipName, 
-			CASe c.isenable when 1 then 'Active' When 0 then 'NotActive' END Enable, c.ModifiedDate
-	FROM Consumer C (Nolock)
-	LEFT JOIN VipConsumer VC (Nolock) ON VC.ID = C.VipConsumerId
-END
 GO
-CREATE PROC DeleteConsumer
-@ID INT
+CREATE PROC GetConsumer
 AS
 BEGIN
-	IF EXISTS(SELECT 1 FROM Consumer WHERE ID = @ID AND IsEnable = 0)
-		select 0 as Result;
-	IF EXISTS(SELECT 1 FROM Consumer where id = @ID)
-		SELECT - 1 AS Result;
-	IF EXISTS (SELECT 1 FROM Consumer WHERE id = @ID AND IsEnable = 1)
-	begin
-		update Consumer set IsEnable = 0, ModifiedDate =GETDATE() where ID = @ID
-		SELect 1 as Result;
-	end
-END
+    SELECT C.ID,
+           C.Name,
+           C.CMND,
+           C.Location,
+           C.Phone,
+           C.BirthDay,
+           C.CreatedDate,
+           VC.VipName,
+           CASE C.IsEnable
+               WHEN 1 THEN
+                   'Active'
+               WHEN 0 THEN
+                   'NotActive'
+           END Enable,
+           C.AvailableBalances,
+           C.ModifiedDate
+    FROM Consumer C (NOLOCK)
+        LEFT JOIN VipConsumer VC (NOLOCK)
+            ON VC.ID = C.VipConsumerId;
+END;
+GO
+CREATE PROC DeleteConsumer @ID INT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Consumer WHERE ID = @ID AND IsEnable = 0)
+        SELECT 0 AS Result;
+    IF EXISTS (SELECT 1 FROM Consumer WHERE ID = @ID)
+        SELECT -1 AS Result;
+    IF EXISTS (SELECT 1 FROM Consumer WHERE ID = @ID AND IsEnable = 1)
+    BEGIN
+        UPDATE Consumer
+        SET IsEnable = 0,
+            ModifiedDate = GETDATE()
+        WHERE ID = @ID;
+        SELECT 1 AS Result;
+    END;
+END;
 GO
 
 CREATE PROC UpdateConsumer
-@ID INT,
-@Name NVARCHAR(150),
-@CMND VARCHAR(12),
-@Location NVARCHAR(200),
-@Phone VARCHAR(20),
-@Email VARCHAR(150),
-@BirthDay DATE
+    @ID INT,
+    @Name NVARCHAR(150),
+    @CMND VARCHAR(12),
+    @Location NVARCHAR(200),
+    @Phone VARCHAR(20),
+    @Email VARCHAR(150),
+    @BirthDay DATE,
+    @AvailableBalances BIGINT = 0
 AS
 BEGIN
-	IF EXISTS(SELECT 1 FROM Consumer WHERE ID = @ID AND IsEnable = 0)
-		select 0 as Result;
-	IF EXISTS(SELECT 1 FROM Consumer where id = @ID)
-		SELECT - 1 AS Result;
-	IF EXISTS (SELECT 1 FROM Consumer WHERE id = @ID AND IsEnable = 1)
-	BEGIN
-		update Consumer
-		set Name = @Name, CMND = @CMND, Location = @Location, Phone = @Phone,
-				Email = @Email, BirthDay = @BirthDay
-		where id = @ID
+    IF EXISTS (SELECT 1 FROM Consumer WHERE ID = @ID AND IsEnable = 0)
+        SELECT 0 AS Result;
+    IF EXISTS (SELECT 1 FROM Consumer WHERE ID = @ID)
+        SELECT -1 AS Result;
+    IF EXISTS (SELECT 1 FROM Consumer WHERE ID = @ID AND IsEnable = 1)
+    BEGIN
+        UPDATE Consumer
+        SET Name = @Name,
+            CMND = @CMND,
+            Location = @Location,
+            Phone = @Phone,
+            Email = @Email,
+            BirthDay = @BirthDay,
+            AvailableBalances = @AvailableBalances
+        WHERE ID = @ID;
 
-		select 1 as Result
-	END
-END
+        SELECT 1 AS Result;
+    END;
+END;
 GO
 
 CREATE PROC InsertConsumer
-@ID INT,
-@Name NVARCHAR(150),
-@CMND VARCHAR(12),
-@Location NVARCHAR(200),
-@Phone VARCHAR(20),
-@Email VARCHAR(150),
-@BirthDay DATE
-as
-begin
-	 IF EXISTS
+    @ID INT,
+    @Name NVARCHAR(150),
+    @CMND VARCHAR(12),
+    @Location NVARCHAR(200),
+    @Phone VARCHAR(20),
+    @Email VARCHAR(150),
+    @BirthDay DATE
+AS
+BEGIN
+    IF EXISTS
     (
         SELECT 1
         FROM dbo.Consumer AS vc
-        WHERE vc.Id = @ID and Name = @Name
+        WHERE vc.ID = @ID
+              AND Name = @Name
               AND vc.IsEnable = 1
     )
         SELECT 0 AS Result;
@@ -750,7 +775,8 @@ begin
     (
         SELECT 1
         FROM dbo.Consumer AS vc
-        WHERE vc.Id = @ID and Name = @Name
+        WHERE vc.ID = @ID
+              AND Name = @Name
               AND vc.IsEnable = 0
     )
     BEGIN
@@ -763,10 +789,139 @@ begin
     ELSE
     BEGIN
         INSERT INTO dbo.Consumer
-		(
-			Name,
-			CMND, Location, Phone,Email, BirthDay, CreatedDate, IsEnable
-		)
-		values (@Name, @CMND, @Location, @Phone, @Email, @BirthDay, GETDATE(), 1)
+        (
+            Name,
+            CMND,
+            Location,
+            Phone,
+            Email,
+            BirthDay,
+            CreatedDate,
+            IsEnable
+        )
+        VALUES
+        (@Name, @CMND, @Location, @Phone, @Email, @BirthDay, GETDATE(), 1);
     END;
-end
+END;
+GO
+CREATE TABLE News
+(
+    ID INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    ImageNews NVARCHAR(100) NULL,
+    Header NVARCHAR(100) NULL,
+    Link NTEXT NULL,
+    Content2 NTEXT NULL,
+    Content3 NTEXT NULL,
+    Content NTEXT NULL
+);
+GO
+CREATE TABLE Contact
+(
+    ID INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    ConsumerName NVARCHAR(50) NULL,
+    Emai NVARCHAR(50) NULL,
+    Content NTEXT NULL
+);
+GO
+CREATE TABLE [Order]
+(
+    ID INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    Paid INT NULL,
+    Status INT NULL,
+    DeliveryStatus INT NULL,
+    PhuongThuc INT NULL,
+    DateOfBooking DATETIME NULL,
+    DeliveryDate DATETIME NULL,
+    ConsumerID INT NULL,
+    FOREIGN KEY (ConsumerID) REFERENCES dbo.Consumer (ID) ON UPDATE CASCADE ON DELETE CASCADE
+);
+GO
+CREATE TABLE AnhBia
+(
+    ID INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    CoverName NVARCHAR(50) NULL,
+    Link NTEXT NULL
+);
+GO
+CREATE TABLE Producer
+(
+    ID INT IDENTITY(2, 2) PRIMARY KEY NOT NULL,
+    Name NVARCHAR(150) NULL,
+    IsEnable INT NULL,
+    StartDate DATETIME NULL,
+    EndDate DATETIME NULL
+);
+GO
+CREATE TABLE Product
+(
+    ID INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+    ProductName NVARCHAR(200) NULL,
+    ProducerID INT NULL,
+    ProdImage NVARCHAR(50) NULL,
+    ProdImage1 NVARCHAR(50) NULL,
+    ProdImage2 NVARCHAR(50) NULL,
+    ProdImage3 NVARCHAR(50) NULL,
+    ModifiedDate DATETIME NULL,
+    QuantityInStock INT NULL,
+    Price FLOAT NULL,
+    IsEnable INT NULL,
+    CreatedDate DATETIME NULL,
+    CreatedBy VARCHAR(20) NULL,
+    Content NVARCHAR(4000) NULL,
+    FOREIGN KEY (ProducerID) REFERENCES dbo.Producer (ID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+GO
+CREATE TABLE [OrderDetail]
+(
+    OrderId INT NOT NULL,
+    ProductId INT NOT NULL,
+    Quantity INT CHECK (Quantity > 0) NULL,
+    Dongia DECIMAL(18, 0) CHECK (Dongia >= 0) NULL,
+    PRIMARY KEY
+    (
+        OrderId,
+        ProductId
+    ),
+    FOREIGN KEY (OrderId) REFERENCES dbo.[Order] (ID) ON UPDATE CASCADE ON DELETE CASCADE
+);
+GO
+--
+INSERT INTO dbo.Producer
+(
+    Name,
+    IsEnable,
+    StartDate,
+    EndDate
+)
+VALUES
+(N'Delites', 1, GETDATE(), GETDATE()),
+(N'Comfee', 1, GETDATE(), GETDATE()),
+(N'Sunhouse', 1, GETDATE(), GETDATE()),
+(N'Happycook', 1, GETDATE(), GETDATE()),
+(N'Sanaky', 1, GETDATE(), GETDATE()),
+(N'Kangaroo', 1, GETDATE(), GETDATE()),
+(N'LG', 1, GETDATE(), GETDATE()),
+(N'Samsung', 1, GETDATE(), GETDATE()),
+(N'Karofi', 1, GETDATE(), GETDATE());
+GO
+INSERT INTO dbo.Product
+(
+    ProductName,
+    ProducerID,
+    QuantityInStock,
+    Price,
+    IsEnable,
+    CreatedDate,
+    CreatedBy,
+    Content
+)
+VALUES
+(   N'Máy lọc nước RO Karofi B930 9 lõi', -- ProductName - nvarchar(200)
+    18,                                   -- ProducerID - int
+    0,                                    -- QuantityInStock - int
+    3990000,                              -- Price - float
+    1,                                    -- IsEnable - int
+    GETDATE(),                            -- CreatedDate - datetime
+    'Admin',                              -- CreatedBy - varchar(20)
+    N'Máy lọc nước RO Karofi B930 9 lõi'  -- Content - nvarchar(4000)
+    );
