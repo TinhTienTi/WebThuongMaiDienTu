@@ -54,4 +54,9 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
         public string Enable { get; set; }
         public DateTime? ModifiedDate { get; set; }
     }
+    public class ParameterProducer
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
 }

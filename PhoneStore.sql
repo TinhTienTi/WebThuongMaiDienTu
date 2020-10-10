@@ -925,3 +925,71 @@ VALUES
     'Admin',                              -- CreatedBy - varchar(20)
     N'Máy lọc nước RO Karofi B930 9 lõi'  -- Content - nvarchar(4000)
     );
+
+go
+ CREATE PROC GetAllProducer
+ AS
+ BEGIN
+	SELECT P.ID,
+		P.Name,
+		P.StartDate,
+		P.IsEnable,
+		P.EndDate
+	FROM Producer AS P
+ END
+ GO
+ CREATE PROC InsertProducer
+ @Name NVARCHAR(150)
+ AS
+ BEGIN
+	IF EXISTS (SELECT 1 FROM Producer P WHERE Name = @Name AND IsEnable = 1)
+		SELECT 0 AS Result;
+	IF EXISTS (SELECT 1 FROM Producer P WHERE Name = @Name AND IsEnable = 0)
+	BEGIN
+		UPDATE Producer SET IsEnable = 1 WHERE Name = @Name
+		SELECT -1 AS Result;
+	END
+	IF NOT EXISTS (SELECT 1 FROM Producer P WHERE Name = @Name)
+	BEGIN
+		INSERT INTO Producer
+		(
+			NAME,
+			IsEnable,
+			StartDate
+		)
+		VALUES (@Name, 1, GETDATE())
+	END
+ END
+ GO
+
+ create PROC UpdateProducer
+ @ID INT,
+ @Name NVARCHAR(150)
+AS 
+BEGIN
+	IF EXISTS (SELECT 1 FROM Producer P WHERE Name = @Name AND IsEnable = 1)
+	BEGIN
+		UPDATE Producer SET Name = @Name  WHERE ID = @ID 
+		select 1 as Result;
+	END
+	IF EXISTS (SELECT 1 FROM Producer P WHERE Name = @Name AND IsEnable = 0)
+	BEGIN
+		UPDATE Producer SET IsEnable = 1 WHERE Name = @Name
+		SELECT -1 AS Result;
+	END
+END
+GO
+CREATE PROC DeleteProducer
+ @ID INT
+ as
+ begin
+	IF EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
+	BEGIN
+		UPDATE Producer SET IsEnable = 0  WHERE ID = @ID 
+		SELECT 1 AS Result;
+	END
+	IF NOT EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
+	BEGIN
+		SELECT 0 AS Result;
+	END
+ end
