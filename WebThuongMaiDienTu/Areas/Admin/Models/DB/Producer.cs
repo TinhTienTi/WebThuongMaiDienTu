@@ -37,7 +37,7 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
                 {
                     db.Open();
                 }
-                return db.Query<Producer>("UpdateProducer", new { ID = model.ID, Name = model.Name }, commandType: CommandType.StoredProcedure).ToList();
+                return db.Query<Producer>("UpdateProducer", new { ID = model.ID, Name = model.Name, IsEnable = model.IsEnable }, commandType: CommandType.StoredProcedure).ToList();
             }
         }
         public static List<Producer> Insert(ParameterProducer model)

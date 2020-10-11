@@ -172,12 +172,12 @@
         <em>Mã nhân viên: #= EmployeeID #</em>
         <dl>
             <dt> Trạng thái: #= Enable #</dt>
-            <dt> CMND: #= CitizenID #</dt>
-            <dt> Điện thoại: #= Phone #</dt>
-            <dt> Địa chỉ: #= Location #</dt>
-            <dt> Quê quán: #= HomeTown #</dt>
-            <dt> Ngày bắt đầu: #= StartDate == null ? kendo.toString('') :  kendo.toString(kendo.parseDate(StartDate, 'yyyy-MM-dd'), 'MM/dd/yy hh:mm:ss') #</dt>
-            <dt> Ngày kết thúc: #= EndDate == null ? kendo.toString('') :  kendo.toString(kendo.parseDate(EndDate, 'yyyy-MM-dd'), 'MM/dd/yy hh:mm:ss')#</dt>
+            <dt> CMND: #= CitizenID == null ? kendo.toString('Không xác định.') : CitizenID  #</dt>
+            <dt> Điện thoại: #= Phone == null ? kendo.toString('Không xác định.') : Phone #</dt>
+            <dt> Địa chỉ: #= Location == null ? kendo.toString('Không xác định.') : Location #</dt>
+            <dt> Quê quán: #= HomeTown == null ? kendo.toString('Không xác định.') : HomeTown #</dt>
+            <dt> Ngày bắt đầu: #= StartDate == null ? kendo.toString('Không xác định.') :  kendo.toString(kendo.parseDate(StartDate, 'yyyy-MM-dd'), 'MM/dd/yy hh:mm:ss') #</dt>
+            <dt> Ngày kết thúc: #= EndDate == null ? kendo.toString('Không xác định.') :  kendo.toString(kendo.parseDate(EndDate, 'yyyy-MM-dd'), 'MM/dd/yy hh:mm:ss')#</dt>
         </dl>
     </div>
 </script>

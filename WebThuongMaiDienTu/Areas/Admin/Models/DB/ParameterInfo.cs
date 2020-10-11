@@ -58,5 +58,6 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public int IsEnable { get; set; }
     }
 }

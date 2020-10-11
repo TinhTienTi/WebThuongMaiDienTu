@@ -300,13 +300,15 @@ BEGIN
             Email,
             HomeTownHouseNumber,
             HomeTownRoadName,
+			HomeTownWardName,
             HomeTownDistrictName,
-            HomeTownProvinceName
+            HomeTownProvinceName,
+			IsEnable
         )
         VALUES
         (@EmployeeID, @FullNameVN, @CitizenID, @Phone, @BirthDay, @HouseNumber, @RoadName, @LocationWardID,
          @LocationDistrictId, @LocationProvinceId, @Email, @HomeTownHouseNumber, @HomeTownRoadName, @HomeTownWardName,
-         @HomeTownDistrictName, @HomeTownProvinceName);
+         @HomeTownDistrictName, @HomeTownProvinceName, 1);
         SELECT SCOPE_IDENTITY() AS Result;
     END;
 END;
@@ -962,33 +964,39 @@ go
  END
  GO
 
- create PROC UpdateProducer
+ ALTER PROC UpdateProducer
  @ID INT,
- @Name NVARCHAR(150)
+ @Name NVARCHAR(150),
+ @IsEnable INT
 AS 
 BEGIN
-	IF EXISTS (SELECT 1 FROM Producer P WHERE Name = @Name AND IsEnable = 1)
+	IF EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
 	BEGIN
-		UPDATE Producer SET Name = @Name  WHERE ID = @ID 
-		select 1 as Result;
+		
+		UPDATE Producer SET Name = @Name, IsEnable = @IsEnable, EndDate = CASE WHEN @IsEnable = 0 THEN GETDATE() ELSE NULL END  WHERE ID = @ID 
+		SELECT 1 as Result;
 	END
-	IF EXISTS (SELECT 1 FROM Producer P WHERE Name = @Name AND IsEnable = 0)
+	ELSE IF EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 0)
 	BEGIN
-		UPDATE Producer SET IsEnable = 1 WHERE Name = @Name
+		UPDATE Producer SET Name = @Name, IsEnable = 1, EndDate = null WHERE Name = @Name
 		SELECT -1 AS Result;
+	END
+	IF NOT EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID)
+	BEGIN
+		SELECT 0 AS Result;
 	END
 END
 GO
-CREATE PROC DeleteProducer
+ALTER PROC DeleteProducer
  @ID INT
  as
  begin
 	IF EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
 	BEGIN
-		UPDATE Producer SET IsEnable = 0  WHERE ID = @ID 
+		UPDATE Producer SET IsEnable = 0, EndDate = getdate()  WHERE ID = @ID 
 		SELECT 1 AS Result;
 	END
-	IF NOT EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
+	ELSE IF NOT EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
 	BEGIN
 		SELECT 0 AS Result;
 	END

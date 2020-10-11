@@ -7,13 +7,93 @@
 <div id="form-detail">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Danh sách Tài khoản</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách Nhà sản xuất</h6>
         </div>
         <div class="card-body">
             <div id="grid_ListAll_Producer"></div>
         </div>
+        <div id="editDetails"></div>
+        <div id="deleteDetails"></div>
+        <button onclick="callDivInsert()" class="btn btn-success">Tạo mới</button>
     </div>
 </div>
 
+<div id="form-info">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thêm Loại Sản Phẩm Mới</h6>
+        </div>
+        <div class="form" id="form">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="inputEmail4">
+                            Tên Nhà sản xuất:
+                            <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorImageName"></i>
+                            <small id="checkErrorMessageName"></small>
+                        </label>
+                        <input class="form-control" id="txtName" placeholder="Tên Nhà sản xuất">
+                    </div>
+                </div>
+                <hr />
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                    Đăng ký
+                </button>
+                <button onclick="BackSearch()" class="btn btn-danger">Quay lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* Div Thông báo *@
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:Highlight">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="color:white">Thêm nhân viên mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Hãy chắc chắn rằng bạn muốn thêm một loại mới và đã nhập đúng tên?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="InsertProducer()" data-dismiss="modal">Tiếp tục</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Xoá *@
+<script type="text/x-kendo-template" id="templateDelete">
+    <div id="details-container">
+        <label>Bạn có chắc muốn xoá loại sản phẩm có mã là: #= ID# và tên: #= Name #?</label>
+        <hr />
+        <button onclick="Delete(2,0)" class="btn btn-secondary">Huỷ</button>
+        <button onclick="Delete(1, #=ID#)" class="btn btn-danger">Xoá</button>
+    </div>
+</script>
+@* Chỉnh sửa *@
+<script type="text/x-kendo-template" id="templateEdit">
+    <div id="details-container">
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="inputName">
+                    Tên loại sản phẩm:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImageName"></i>
+                    <small id="checkErrorEditMessageName"></small>
+                </label>
+                <input class="form-control  col-md-10" id="txtEditName" placeholder="Tên nhà sản xuất" value="#= Name#">
+            </div>
+            <div class="form-group col-md-11">
+                <label for="inputStatus">Trạng thái:</label>
+                <select id="inputStatus" class="form-control" style="width:100%"></select>
+            </div>
+        </div>
+        <button onclick="Update(2, 0)" class="btn btn-secondary">Huỷ</button>
+        <button onclick="Update(1, #= ID#)" class="btn btn-danger">Cập nhật</button>
+    </div>
+</script>
 <script src="~/Areas/Admin/Style/Admin/vendor/jquery/jquery.min.js"></script>
 <script src="~/Areas/Admin/Scripts/Producer.js"></script>
