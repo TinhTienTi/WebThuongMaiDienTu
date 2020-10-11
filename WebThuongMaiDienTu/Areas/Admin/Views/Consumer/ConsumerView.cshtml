@@ -3,7 +3,8 @@
     ViewBag.Title = "Consumer";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<div id="form-detail">
+
+<div class="border p-3" id="form-detail">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Danh sách Khách hàng</h6>
@@ -13,9 +14,9 @@
         </div>
         <div id="deleteDetails"></div>
         <div id="editDetails"></div>
+        <button onclick="" class="btn btn-primary">Thêm Khách hàng mới</button>
     </div>
 </div>
-
 <div id="form-info">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -30,7 +31,7 @@
                             <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorImageVipName"></i>
                             <small id="checkErrorMessageVipName"></small>
                         </label>
-                        <input class="form-control" id="txtVipName" placeholder="Tên loại VIP">
+                        <input class="form-control" id="txtVipName" placeholder="Tên Khách hàng">
                     </div>
                 </div>
                 <hr />
@@ -75,13 +76,78 @@
 @* Chỉnh sửa *@
 <script type="text/x-kendo-template" id="templateEdit">
     <div id="details-container">
-        <label for="inputName">
-            Tên loại sản phẩm:
-            <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
-            <small id="checkErrorEditMessage"></small>
-        </label>
-        <input class="form-control" id="txtEdit" placeholder="Tên loại sản phẩm" value="#= CateName#">
-        <hr />
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    Tên Khách hàng:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="" placeholder="Tên KH" value="#= Name == null ? kendo.toString('') : Name #">
+            </div>
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    CMND:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="" placeholder="CMND" value="#= CMND == null ? kendo.toString('') : CMND #">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    Địa chỉ:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="" placeholder="Địa chỉ" value="#= Location == null ? kendo.toString('') : Location #">
+            </div>
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    Số điện thoại:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="" placeholder="Số điện thoại" value="#= Phone == null ? kendo.toString('') : Phone #">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    Email:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="" placeholder="Thư điện tử" value="#= Email == null ? kendo.toString('') : Email#">
+            </div>
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    Ngày sinh:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="" placeholder="Ngày sinh" value="#= BirthDay == null ? kendo.toString('') : BirthDay#">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    Tài Khoản:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="txtEdit" placeholder="Tài khoản" value="#= UserName == null ? kendo.toString('') : UserName#">
+            </div>
+            <div class="form-group col-md-11">
+                <label for="inputName">
+                    Mật khẩu:
+                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
+                    <small id="checkErrorEditMessage"></small>
+                </label>
+                <input class="form-control" id="txtEdit" placeholder="Mật khẩu" value="#= Password == null ? kendo.toString('') : Password#">
+            </div>
+        </div>
         <button onclick="UpdateCate(2, 0)" class="btn btn-secondary">Huỷ</button>
         <button onclick="UpdateCate(1, #= ID#)" class="btn btn-danger">Cập nhật</button>
     </div>

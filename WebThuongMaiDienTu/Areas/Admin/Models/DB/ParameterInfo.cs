@@ -53,6 +53,8 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
         public string VipName { get; set; }
         public string Enable { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
     public class ParameterProducer
     {

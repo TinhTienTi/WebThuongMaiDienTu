@@ -507,6 +507,8 @@ CREATE TABLE Consumer
     Score INT NULL,
     IsEnable SMALLINT NULL,
     ModifiedDate DATETIME NULL,
+	UserName Varchar(500) NULL,
+	Password Varchar(500) NULL,
     FOREIGN KEY (VipConsumerId) REFERENCES dbo.VipConsumer (ID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 GO
@@ -680,7 +682,7 @@ BEGIN
     END;
 END;
 GO
-CREATE PROC GetConsumer
+ALTER PROC GetConsumer
 AS
 BEGIN
     SELECT C.ID,
@@ -698,7 +700,9 @@ BEGIN
                    'NotActive'
            END Enable,
            C.AvailableBalances,
-           C.ModifiedDate
+           C.ModifiedDate,
+		   C.UserName,
+		   C.Password
     FROM Consumer C (NOLOCK)
         LEFT JOIN VipConsumer VC (NOLOCK)
             ON VC.ID = C.VipConsumerId;
@@ -722,7 +726,7 @@ BEGIN
 END;
 GO
 
-CREATE PROC UpdateConsumer
+ALTER PROC UpdateConsumer
     @ID INT,
     @Name NVARCHAR(150),
     @CMND VARCHAR(12),
@@ -730,7 +734,9 @@ CREATE PROC UpdateConsumer
     @Phone VARCHAR(20),
     @Email VARCHAR(150),
     @BirthDay DATE,
-    @AvailableBalances BIGINT = 0
+    @AvailableBalances BIGINT = 0,
+	@UserName varchar(20),
+	@Password varchar(20)
 AS
 BEGIN
     IF EXISTS (SELECT 1 FROM Consumer WHERE ID = @ID AND IsEnable = 0)
@@ -746,7 +752,9 @@ BEGIN
             Phone = @Phone,
             Email = @Email,
             BirthDay = @BirthDay,
-            AvailableBalances = @AvailableBalances
+            AvailableBalances = @AvailableBalances,
+			UserName = sys.fn_varbintohexsubstring(0, HashBytes('md5', @Password),1,0),
+			Password = @Password
         WHERE ID = @ID;
 
         SELECT 1 AS Result;
@@ -754,14 +762,16 @@ BEGIN
 END;
 GO
 
-CREATE PROC InsertConsumer
+ALTER PROC InsertConsumer
     @ID INT,
     @Name NVARCHAR(150),
     @CMND VARCHAR(12),
     @Location NVARCHAR(200),
     @Phone VARCHAR(20),
     @Email VARCHAR(150),
-    @BirthDay DATE
+    @BirthDay DATE,
+	@UserName varchar(20),
+	@Password varchar(20)
 AS
 BEGIN
     IF EXISTS
@@ -799,13 +809,16 @@ BEGIN
             Email,
             BirthDay,
             CreatedDate,
-            IsEnable
+            IsEnable,
+			UserName, 
+			Password
         )
         VALUES
-        (@Name, @CMND, @Location, @Phone, @Email, @BirthDay, GETDATE(), 1);
+        (@Name, @CMND, @Location, @Phone, @Email, @BirthDay, GETDATE(), 1, @UserName, sys.fn_varbintohexsubstring(0, HashBytes('md5', @Password),1,0));
     END;
 END;
 GO
+
 CREATE TABLE News
 (
     ID INT IDENTITY(1, 1) PRIMARY KEY NOT NULL,

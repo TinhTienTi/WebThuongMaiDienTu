@@ -73,17 +73,35 @@ function init_grid_List_Consumer() {
             },
             attributes: { style: "text-align: left; font-size: 14px" }
         }, {
+            field: "UserName",
+            title: "Tài khoản",
+            width: 200,
+            filterable: {
+                ui: titleFilter
+            },
+            attributes: { style: "text-align: left; font-size: 14px" }
+        }, {
+            field: "Password",
+            title: "Mật khẩu",
+            width: 200,
+            filterable: {
+                ui: "datetimepicker"
+            },
+            attributes: { style: "text-align: left; font-size: 14px" }
+        }, {
             command: {
                 text: "Chỉnh sửa", click: showEditQuestion
-            },
+                },
+                attributes: { style: "text-align: left; font-size: 13px" },
             title: " ",
-            width: 100
+            width: 105
         }, {
             command: {
                 text: "Xoá", click: showDeleteQuestion
             },
             title: " ",
-            width: 100
+                width: 80,
+                attributes: { style: "text-align: left; font-size: 13px" }
         }],
         dataSource: {
             data: [],
@@ -100,7 +118,7 @@ function init_grid_List_Consumer() {
             modal: true,
             visible: false,
             resizable: false,
-            width: 500
+            width: 700
         }).data("kendoWindow");
 
     detailsTemplate1 = kendo.template($("#templateDelete").html());
@@ -111,7 +129,7 @@ function init_grid_List_Consumer() {
             modal: true,
             visible: false,
             resizable: false,
-            width: 500
+            width: 600
         }).data("kendoWindow");
 
     detailsTemplate = kendo.template($("#templateEdit").html());
