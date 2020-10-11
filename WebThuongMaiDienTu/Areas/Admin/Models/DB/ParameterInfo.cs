@@ -62,4 +62,19 @@ namespace WebThuongMaiDienTu.Areas.Admin.Models.DB
         public string Name { get; set; }
         public int IsEnable { get; set; }
     }
+    public class ParameterProduct
+    {
+        public int ID { get; set; }
+        public string ProductName { get; set; }
+        public int ProducerID { get; set; }
+        public string Name { get; set; }
+        public string Content { get; set; }
+        public string ProdImage { get; set; }
+        public string ProdImage1 { get; set; }
+        public string ProdImage2 { get; set; }
+        public string ProdImage3 { get; set; }
+        public int QuantityInStock { get; set; }
+        public float Price { get; set; }
+        public int IsEnable { get; set; }
+    }
 }

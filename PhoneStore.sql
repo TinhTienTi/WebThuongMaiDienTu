@@ -1013,4 +1013,103 @@ ALTER PROC DeleteProducer
 	BEGIN
 		SELECT 0 AS Result;
 	END
- end
+ END
+
+ GO
+
+ CREATE PROC GetAllProduct
+ AS
+ BEGIN
+	SELECT P.ID, P.ProductName, PC.Name, P.Content, P.ProdImage, p.ProdImage1, P.ProdImage2, p.ProdImage3, P.QuantityInStock, P.Price, P.CreatedDate, P.CreatedBy, P.ModifiedDate
+	FROM Product P (Nolock)
+	JOIN Producer PC (Nolock) ON p.ProducerID = PC.ID
+	WHERE P.IsEnable = 1
+ END
+ GO
+
+ ALTER proc Insert_Product
+ @ProductName NVARCHAR(150),
+ @ProducerID INT,
+ @Content NVARCHAR(4000),
+ @ProdImage Nvarchar(50),
+ @ProdImage1 Nvarchar(50),
+ @ProdImage2 Nvarchar(50),
+ @ProdImage3 Nvarchar(50),
+ @QuantityInStock int,
+ @Price float
+ AS
+ BEGIN
+	IF exists (select 1 from Product where ProductName = @ProductName and ProducerID = @ProducerID  AND IsEnable = 1)
+		select 0 as Result;
+	ELSE IF exists (select 1 from Product where ProductName = @ProductName and ProducerID = @ProducerID  AND IsEnable = 0)
+	BEGIN
+		UPDATE Product SET IsEnable = 1, ModifiedDate = GETDATE() WHERE ProductName = @ProductName AND ProducerID = @ProducerID
+		SELECT -1  AS Result;
+	END
+	ELSE
+	BEGIN
+		INSERT INTO Product
+		(
+			ProductName, ProducerID, Content, ProdImage, ProdImage1, ProdImage2, ProdImage3, QuantityInStock, Price, IsEnable, CreatedDate, CreatedBy
+		)
+		values (@ProductName, @ProducerID, @Content, @ProdImage, @ProdImage1, @ProdImage2, @ProdImage3, @QuantityInStock, @Price, 1, getdate(), 'Admin')
+		SELECT SCOPE_IDENTITY() As Result;
+	END
+ END
+
+GO
+
+Create Proc UpdateProduct
+@ID INT, 
+@ProductName NVARCHAR(150),
+ @ProducerID INT,
+ @Content NVARCHAR(4000),
+ @ProdImage Nvarchar(50),
+ @ProdImage1 Nvarchar(50),
+ @ProdImage2 Nvarchar(50),
+ @ProdImage3 Nvarchar(50),
+ @QuantityInStock int,
+ @Price float,
+ @IsEnable INT
+ AS
+ BEGIN
+	IF NOT EXISTS (select 1 from Product where ID = @ID AND IsEnable = 1)
+		SELECT 0 as Result;
+	ELSE IF EXISTS (select 1 from Product where ID = @ID AND IsEnable = 0)
+	BEGIN
+		SELECT -1  AS Result;
+	END
+	ELSE 
+	BEGIN
+		UPdate Product
+		SET
+			ProductName = @ProductName,
+			ProducerID = @ProducerID,
+			Content = @Content,
+			ProdImage = @ProdImage,
+			ProdImage1 = @ProdImage1,
+			ProdImage2 = @ProdImage2,
+			ProdImage3 = @ProdImage3,
+			QuantityInStock = @QuantityInStock,
+			Price = @Price,
+			IsEnable = @IsEnable,
+			ModifiedDate = GetDate()
+	END
+ END
+ GO
+
+ CREATE PROC DeleteProduct
+ @ID INT
+ AS
+ BEGIN
+	IF NOT EXISTS (select 1 from Product where ID = @ID AND IsEnable = 1)
+		SELECT 0 as Result;
+	ELSE IF EXISTS (select 1 from Product where ID = @ID AND IsEnable = 0)
+	BEGIN
+		SELECT -1  AS Result;
+	END
+	ELSE
+	BEGIN
+		UPDATE Product SET IsEnable = 0, ModifiedDate = gETDATE() WHERE ID = @ID
+	END
+ END

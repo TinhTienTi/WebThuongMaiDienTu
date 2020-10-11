@@ -130,24 +130,6 @@
                 <input class="form-control" id="" placeholder="Ngày sinh" value="#= BirthDay == null ? kendo.toString('') : BirthDay#">
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-11">
-                <label for="inputName">
-                    Tài Khoản:
-                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
-                    <small id="checkErrorEditMessage"></small>
-                </label>
-                <input class="form-control" id="txtEdit" placeholder="Tài khoản" value="#= UserName == null ? kendo.toString('') : UserName#">
-            </div>
-            <div class="form-group col-md-11">
-                <label for="inputName">
-                    Mật khẩu:
-                    <i class="fas fa-exclamation-circle" style="color:red" id="checkErrorEditImage"></i>
-                    <small id="checkErrorEditMessage"></small>
-                </label>
-                <input class="form-control" id="txtEdit" placeholder="Mật khẩu" value="#= Password == null ? kendo.toString('') : Password#">
-            </div>
-        </div>
         <button onclick="UpdateCate(2, 0)" class="btn btn-secondary">Huỷ</button>
         <button onclick="UpdateCate(1, #= ID#)" class="btn btn-danger">Cập nhật</button>
     </div>
