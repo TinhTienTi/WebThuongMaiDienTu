@@ -32,8 +32,8 @@ function init_grid_ListAll_Product() {
         }, {
             field: "QuantityInStock",
             title: "Số lượng tồn",
-            width: 250,
-            attributes: { style: "text-align: left; font-size: 14px" }
+            width: 120,
+            attributes: { style: "text-align: right; font-size: 14px" }
         }, {
             field: "Content",
             title: "Giá",
@@ -78,6 +78,21 @@ function init_grid_ListAll_Product() {
             template: "#= ModifiedDate == null ? kendo.toString('') :  kendo.toString(kendo.parseDate(ModifiedDate, 'yyyy-MM-dd'), 'MM/dd/yy hh:mm:ss') #",
             width: 150,
             attributes: { style: "text-align: left; font-size: 14px" }
+        }, {
+            command: {
+                template: "<a role='button' class='k-button k-button-icontext k-grid-edit' href='##'><span class='k-icon k-i-edit'></span>Chỉnh sửa</a>"
+            },
+            attributes: { style: "text-align: left; font-size: 14px" },
+            title: " ",
+            width: 130
+        }, {
+            command: {
+                text: "Xoá",
+                click: showDeleteQuestion
+            },
+            attributes: { style: "text-align: left; font-size: 14px" },
+            title: " ",
+            width: 90
         }],
         dataSource: {
             data: [],
@@ -88,6 +103,22 @@ function init_grid_ListAll_Product() {
             refresh: true
         }
     }).data("kendoGrid");
+
+    wnd = $("#deleteDetails")
+        .kendoWindow({
+            title: "Xoá Sản phẩm",
+            modal: true,
+            visible: false,
+            resizable: false,
+            width: 600
+        }).data("kendoWindow");
+    detailsTemplate1 = kendo.template($("#templateDelete").html());
+}
+function showDeleteQuestion(e) {
+    e.preventDefault();
+    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    wnd.content(detailsTemplate1(dataItem));
+    wnd.center().open();
 }
 function getProduct() {
     $.ajax({
@@ -116,15 +147,62 @@ function getProduct() {
                     toastr.warning('Lỗi tìm kiếm.', 'Thông báo', { timeOut: 1500 });
                     break;
             }
-        },
-        complete: function (cpl) {
-            enableControl(true);
         }
     });
 }
-function enableControl() { }
+function Delete(hasDelete, id) {
+    var deleteId = hasDelete;
+    if (hasDelete == 1) {
+        $.ajax({
+            traditional: true,
+            url: "DeleteController",
+            data: JSON.stringify({ ID: id }),
+            contentType: 'application/json; charset=utf-8',
+            type: 'POST',
+            dataType: 'json',
+            timeout: 60 * 60000,
+            error: function (xhr, e) {
+                toastr.error('Lỗi tìm kiếm. Mã lỗi ' + xhr.status, 'Thông báo', { timeOut: 1500 });
+            },
+            success: function (data) {
+                var _result = data.Result;
+                var _error = data.Error;
+                var _type = data.Type;
+                switch (_result) {
+                    case 1:
+                        var listResult = data.ListResult;
+                        if (listResult[0].Result == 1) {
+                            toastr.success("Xoá thành công sản phẩm có mã là: " + id + ".", "Thông báo", { timeOut: 3000 });
+                            getProduct();
+                            wnd.center().close();
+                        }
+                        if (listResult[0].Result == 0) {
+                            toastr.warning("Sản phẩm có mã là: " + id + " không tồn tại.", "Thông báo", { timeOut: 3000 });
+                            wnd.center().close();
+                        }
+                        if (listResult[0].Result == -1) {
+                            toastr.warning("Nhà sản xuất có mã là: " + id + " đã được xoá.", "Thông báo", { timeOut: 3000 });
+                            wnd.center().close();
+                        }
+                        break;
+                    case 0:
+                        toastr.warning(_error, 'Thông báo', { timeOut: 1500 });
+                        break;
+                    case -1:
+                        toastr.warning('Lỗi tìm kiếm.', 'Thông báo', { timeOut: 1500 });
+                        break;
+                }
+            },
+            complete: function (cpl) {
+                enableControl(true);
+            }
+        });
+    }
+    else
+        wnd.center().close();
+}
 function BackSearch() {
-    getProducer();
+    getProduct();
     $('#form-detail').show();
     $('#form-info').hide();
     $('#txtName').val('');

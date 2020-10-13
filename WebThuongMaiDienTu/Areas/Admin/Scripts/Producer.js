@@ -113,9 +113,6 @@ function getProducer() {
                     toastr.warning('Lỗi tìm kiếm.', 'Thông báo', { timeOut: 1500 });
                     break;
             }
-        },
-        complete: function (cpl) {
-            enableControl(true);
         }
     });
 }
@@ -218,6 +215,10 @@ function Delete(hasDelete, id) {
                             toastr.warning("Nhà sản xuất có mã là: " + id + " đang not active.", "Thông báo", { timeOut: 3000 });
                             wnd.center().close();
                         }
+                        if (listResult[0].Result == -1) {
+                            toastr.warning("Nhà sản xuất có mã là: " + id + " hiện đang còn phân phối sản phẩm.", "Thông báo", { timeOut: 3000 });
+                            wnd.center().close();
+                        }
                         break;
                     case 0:
                         toastr.warning(_error, 'Thông báo', { timeOut: 1500 });
@@ -226,9 +227,6 @@ function Delete(hasDelete, id) {
                         toastr.warning('Lỗi tìm kiếm.', 'Thông báo', { timeOut: 1500 });
                         break;
                 }
-            },
-            complete: function (cpl) {
-                enableControl(true);
             }
         });
     }
@@ -314,9 +312,6 @@ function Update(hasUpdate, ID) {
                         toastr.warning('Lỗi tìm kiếm.', 'Thông báo', { timeOut: 1500 });
                         break;
                 }
-            },
-            complete: function (cpl) {
-                enableControl(true);
             }
         });
     }
@@ -325,7 +320,6 @@ function Update(hasUpdate, ID) {
     }
 }
 // ==========================================================================================================================================
-function enableControl() { }
 function BackSearch() {
     getProducer();
     $('#form-detail').show();

@@ -996,14 +996,14 @@ BEGIN
 	END
 	IF NOT EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID)
 	BEGIN
-		SELECT 0 AS Result;
+		SELECT -1 AS Result;
 	END
 END
 GO
 ALTER PROC DeleteProducer
  @ID INT
  as
- begin
+ begin	
 	IF EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
 	BEGIN
 		UPDATE Producer SET IsEnable = 0, EndDate = getdate()  WHERE ID = @ID 
@@ -1012,6 +1012,10 @@ ALTER PROC DeleteProducer
 	ELSE IF NOT EXISTS (SELECT 1 FROM Producer P WHERE ID = @ID AND IsEnable = 1)
 	BEGIN
 		SELECT 0 AS Result;
+	END
+	ELSE IF EXISTS (SELECT 1 FROM Product WHERE ProducerID = @ID AND IsEnable = 1)
+	BEGIN
+		SELECT -1 AS Result
 	END
  END
 
@@ -1098,7 +1102,7 @@ Create Proc UpdateProduct
  END
  GO
 
- CREATE PROC DeleteProduct
+ ALTER PROC DeleteProduct
  @ID INT
  AS
  BEGIN
@@ -1111,5 +1115,6 @@ Create Proc UpdateProduct
 	ELSE
 	BEGIN
 		UPDATE Product SET IsEnable = 0, ModifiedDate = gETDATE() WHERE ID = @ID
+		SELECT 1  AS Result;
 	END
  END
