@@ -1,6 +1,8 @@
-﻿$(document).ready(function () {
+﻿var urlAjax = "/Admin/Producer"
+$(document).ready(function () {
     init_grid_ListAll_Product();
     $('#form-detail').show();
+    $('#form-info').hide();
     getProduct();
 });
 function init_grid_ListAll_Product() {
@@ -35,10 +37,10 @@ function init_grid_ListAll_Product() {
             width: 120,
             attributes: { style: "text-align: right; font-size: 14px" }
         }, {
-            field: "Content",
+            field: "Price",
             title: "Giá",
-            width: 250,
-            attributes: { style: "text-align: left; font-size: 14px" }
+            width: 100,
+            attributes: { style: "text-align: right; font-size: 14px" }
         }, {
             field: "ProdImage",
             title: "Ảnh",
@@ -119,6 +121,59 @@ function showDeleteQuestion(e) {
     var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
     wnd.content(detailsTemplate1(dataItem));
     wnd.center().open();
+}
+function callDivInsert() {
+    $('#form-detail').hide();
+    $('#form-info').show();
+
+    $('#txtQuantityInStock').kendoNumericTextBox();
+    var numerictextbox = $("#txtQuantityInStock").data("kendoNumericTextBox");
+    numerictextbox.min(0)
+    numerictextbox.max(10000);
+
+    $('#checkErrorImageProductName').hide();
+    $('#checkErrorMessageProductName').hide();
+
+    $('#checkErrorImageContent').hide();
+    $('#checkErrorMessageContent').hide();
+
+    $('#checkErrorImageQuantityInStock').hide();
+    $('#checkErrorMessageQuantityInStock').hide();
+
+    var ddlProducer = $("#ddlProducer").kendoDropDownList({
+        dataTextField: "Name",
+        dataValueField: "ID",
+        height: 310
+    }).data("kendoDropDownList");
+
+    $.ajax({
+        traditional: true,
+        url: "GetAllProducer",
+        contentType: 'application/json; charset=utf-8',
+        type: 'POST',
+        dataType: 'json',
+        timeout: 60 * 60000,
+        error: function (xhr, e) {
+            toastr.error('Lỗi tìm kiếm. Mã lỗi ' + xhr.status, 'Thông báo', { timeOut: 1500 });
+        },
+        success: function (data) {
+            var _result = data.Result;
+            var _error = data.Error;
+            var _type = data.Type;
+            switch (_result) {
+                case 1:
+                    var listResult = data.ListResult;
+                    setDataSource(ddlProducer, listResult);
+                    break;
+                case 0:
+                    toastr.warning(_error, 'Thông báo', { timeOut: 1500 });
+                    break;
+                case -1:
+                    toastr.warning('Lỗi tìm kiếm.', 'Thông báo', { timeOut: 1500 });
+                    break;
+            }
+        }
+    });
 }
 function getProduct() {
     $.ajax({

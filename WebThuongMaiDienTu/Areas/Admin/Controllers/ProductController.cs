@@ -122,5 +122,32 @@ namespace WebThuongMaiDienTu.Areas.Admin.Controllers
                 return Json(new { Result = 0, Error = string.Format("Lỗi.", ""), JsonRequestBehavior.AllowGet });
             }
         }
+        [HttpPost]
+        public JsonResult GetAllProducer()
+        {
+            try
+            {
+                List<GetProducer> listResult = GetProducer.GetAllProducer();
+                if (listResult.Count > 0)
+                {
+                    var listSuccess = new
+                    {
+                        Result = 1,
+                        Today = DateTime.Now.ToString(),
+                        ListResult = listResult
+                    };
+
+                    var jsonResult = Json(listSuccess, JsonRequestBehavior.AllowGet);
+                    jsonResult.MaxJsonLength = int.MaxValue;
+                    return jsonResult;
+                }
+                else
+                    return Json(new { Result = 0, Error = string.Format("Không tìm thấy thông tin", ""), JsonRequestBehavior.AllowGet });
+            }
+            catch
+            {
+                return Json(new { Result = 0, Error = string.Format("Lỗi.", ""), JsonRequestBehavior.AllowGet });
+            }
+        }
     }
 }
