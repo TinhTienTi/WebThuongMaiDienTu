@@ -10,13 +10,16 @@ namespace Models.Framework
         public WebThuongMaiDienTu()
             : base("name=WebThuongMaiDienTu")
         {
+
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
+
         public virtual DbSet<EmployeeInfo> EmployeeInfoes { get; set; }
         public virtual DbSet<LocationDistrict> LocationDistricts { get; set; }
         public virtual DbSet<LocationProvince> LocationProvinces { get; set; }
         public virtual DbSet<LocationWard> LocationWards { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -35,6 +38,8 @@ namespace Models.Framework
             modelBuilder.Entity<Account>()
                 .Property(e => e.ModifiedByUser)
                 .IsUnicode(false);
+
+           
 
             modelBuilder.Entity<EmployeeInfo>()
                 .Property(e => e.Name)
@@ -130,6 +135,9 @@ namespace Models.Framework
             modelBuilder.Entity<LocationWard>()
                 .Property(e => e.WardNameFullVN)
                 .IsUnicode(false);
+
+           
+        
         }
     }
 }
